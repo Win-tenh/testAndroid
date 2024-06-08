@@ -13,10 +13,10 @@
         android:theme="@style/Theme.TestDB"
         tools:targetApi="31">
         <activity
-            android:name=".EmployeeDetailActivity"
+            android:name=".detail.EmployeeDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".UnitDetailActivity"
+            android:name=".detail.UnitDetailActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

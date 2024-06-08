@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_add_unit"
+        android:title="Thêm đơn vị"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_employee"
+        android:title="Thêm nhân viên"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+</menu>
