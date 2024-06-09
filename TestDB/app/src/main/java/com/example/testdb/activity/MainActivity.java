@@ -123,13 +123,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 unitList.clear();
                 for (DataSnapshot unitSnapshot : snapshot.getChildren()) {
                     String id = unitSnapshot.getKey();
-                    String name = unitSnapshot.child("unit_name").getValue(String.class);
-                    String email = unitSnapshot.child("unit_email").getValue(String.class);
-                    String phone = unitSnapshot.child("unit_phone").getValue(String.class);
-                    String logo = unitSnapshot.child("unit_logo").getValue(String.class);
-                    String website = unitSnapshot.child("unit_web").getValue(String.class);
-                    String address = unitSnapshot.child("unit_address").getValue(String.class);
-                    String parent_id = unitSnapshot.child("parent_id").getValue(String.class);
+                    String name = unitSnapshot.child("name").getValue(String.class);
+                    String email = unitSnapshot.child("email").getValue(String.class);
+                    String phone = unitSnapshot.child("phone").getValue(String.class);
+                    String logo = unitSnapshot.child("logo").getValue(String.class);
+                    String website = unitSnapshot.child("website").getValue(String.class);
+                    String address = unitSnapshot.child("address").getValue(String.class);
+                    String parent_id = unitSnapshot.child("parentUnitId").getValue(String.class);
                     Unit unit = new Unit(
                             id,
                             name,
@@ -161,20 +161,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 employeeList.clear();
                 for (DataSnapshot Snapshot : snapshot.getChildren()) {
                     String id = Snapshot.getKey();
-                    String name = Snapshot.child("employee_name").getValue(String.class);
-                    String email = Snapshot.child("employee_email").getValue(String.class);
-                    String phone = Snapshot.child("employee_phone").getValue(String.class);
-                    String logo = Snapshot.child("employee_logo").getValue(String.class);
-                    String position = Snapshot.child("unit_position").getValue(String.class);
-                    String unit_id = Snapshot.child("unit_id").getValue(String.class);
+                    String name = Snapshot.child("name").getValue(String.class);
+                    String email = Snapshot.child("email").getValue(String.class);
+                    String phone = Snapshot.child("phone").getValue(String.class);
+                    String avatar = Snapshot.child("avatar").getValue(String.class);
+                    String position = Snapshot.child("position").getValue(String.class);
+                    String id_unit = Snapshot.child("id_unit").getValue(String.class);
                     Employee employee = new Employee(
                             id,
                             name,
                             phone,
                             email,
                             position,
-                            logo,
-                            unit_id
+                            avatar,
+                            id_unit
                     );
                     employeeList.add(employee);
                 }

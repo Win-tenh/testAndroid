@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,12 +15,15 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.testdb.R;
 import com.example.testdb.activity.detail.DetailUnitActivity;
+import com.example.testdb.db.UnitDB;
+import com.example.testdb.model.Unit;
 
 public class AddUnitActivity extends AppCompatActivity {
 
     private ImageButton btnBack;
-    private TextView tvNamePage, tvAddEdit, tvDel;
+    private TextView tvNamePage, tvAddEdit, tvDel, tvParent;
     private EditText etName, etPhone, etEmail, etWebsite, etAddress, etParent;
+    private UnitDB dbUnit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class AddUnitActivity extends AppCompatActivity {
         tvNamePage = findViewById(R.id.tv_name_layout);
         tvAddEdit = findViewById(R.id.btn_add_edit);
         tvDel = findViewById(R.id.btn_delete);
+        tvParent = findViewById(R.id.tv_parent_unit);
         // input
         etName = findViewById(R.id.et_name_unit);
         etPhone = findViewById(R.id.et_phone_unit);
@@ -47,32 +52,39 @@ public class AddUnitActivity extends AppCompatActivity {
         tvNamePage.setText("Thêm đơn vị");
         tvAddEdit.setText("Thêm");
         tvDel.setVisibility(TextView.GONE);
+        tvParent.setText("Đơn vị trực thuộc (tùy chọn):");
+
+        dbUnit = new UnitDB();
 
         // Event
         btnBack.setOnClickListener(v -> finish());
         tvAddEdit.setOnClickListener(v -> {
-            if (validate()) { return; }
-            // xử lý
+            // lấy dữ liệu từ input
             String name = etName.getText().toString().trim();
             String phone = etPhone.getText().toString().trim();
             String email = etEmail.getText().toString().trim();
             String website = etWebsite.getText().toString().trim();
             String address = etAddress.getText().toString().trim();
             String parent = etParent.getText().toString().trim();
-            String avatar = "";
-
-
-//            Intent intent = new Intent(this, DetailUnitActivity.class);
-//            startActivity(intent);
+            String logo = "";
+            // check dữ liệu
+            if (!validate(name, phone, email, website, address)) {
+                Toast.makeText(this, "Nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            // thêm dữ liệu vào database
+            Unit unit = new Unit("", name, email, website, logo, address, phone, parent);
+            dbUnit.addUnit(unit);
+            finish();
         });
     }
 
-    private boolean validate() {
-        if (etName.getText().toString().isEmpty() ||
-                etPhone.getText().toString().isEmpty() ||
-                etEmail.getText().toString().isEmpty() ||
-                etWebsite.getText().toString().isEmpty() ||
-                etAddress.getText().toString().isEmpty() ) {
+    private boolean validate(String name, String phone, String email, String website, String address) {
+        if (name.isEmpty() ||
+                phone.isEmpty() ||
+                email.isEmpty() ||
+                website.isEmpty() ||
+                address.isEmpty()) {
             return false;
         }
         return true;
