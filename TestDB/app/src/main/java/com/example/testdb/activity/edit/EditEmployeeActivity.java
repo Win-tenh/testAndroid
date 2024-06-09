@@ -1,7 +1,8 @@
-package com.example.testdb.detail;
+package com.example.testdb.activity.edit;
 
 import android.os.Bundle;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,20 +12,33 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.testdb.R;
 
-public class UnitDetailActivity extends AppCompatActivity {
+public class EditEmployeeActivity extends AppCompatActivity {
+
+    private ImageButton btnBack;
+    private TextView tvNamePage, tvAddEdit, tvDel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_unit_detail);
+        setContentView(R.layout.activity_edit_employee);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        ImageButton btn_back = findViewById(R.id.btn_back);
-        btn_back.setOnClickListener(v -> finish());
+        btnBack = findViewById(R.id.btn_back);
+        tvNamePage = findViewById(R.id.tv_name_layout);
+        tvAddEdit = findViewById(R.id.btn_add_edit);
+        tvDel = findViewById(R.id.btn_delete);
+
+        tvNamePage.setText("Sửa nhân viên");
+        tvAddEdit.setText("Lưu");
+        tvDel.setVisibility(TextView.GONE);
+
+        // Event
+        btnBack.setOnClickListener(v -> finish());
+        tvAddEdit.setOnClickListener(v -> finish());
     }
 }

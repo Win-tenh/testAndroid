@@ -1,4 +1,4 @@
-package com.example.testdb;
+package com.example.testdb.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.testdb.R;
+import com.example.testdb.model.ItemContact;
 
 import java.util.List;
 

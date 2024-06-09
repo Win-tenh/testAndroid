@@ -1,4 +1,4 @@
-package com.example.testdb;
+package com.example.testdb.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,8 +19,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.testdb.detail.EmployeeDetailActivity;
-import com.example.testdb.detail.UnitDetailActivity;
+import com.example.testdb.R;
+import com.example.testdb.activity.add.AddEmployeeActivity;
+import com.example.testdb.activity.add.AddUnitActivity;
+import com.example.testdb.adapter.ContactAdapter;
+import com.example.testdb.model.ItemContact;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -136,11 +139,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add_unit) {
-            Intent intent = new Intent(this, UnitDetailActivity.class);
+            Intent intent = new Intent(this, AddUnitActivity.class);
             startActivity(intent);
             return true;
         } else if (item.getItemId() == R.id.action_add_employee) {
-            Intent intent = new Intent(this, EmployeeDetailActivity.class);
+            Intent intent = new Intent(this, AddEmployeeActivity.class);
             startActivity(intent);
             return true;
         }

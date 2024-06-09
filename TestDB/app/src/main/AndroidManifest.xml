@@ -12,14 +12,30 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestDB"
         tools:targetApi="31">
+
         <activity
-            android:name=".detail.EmployeeDetailActivity"
+            android:name=".activity.edit.EditUnitActivity"
             android:exported="false" />
         <activity
-            android:name=".detail.UnitDetailActivity"
+            android:name=".activity.edit.EditEmployeeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.add.AddUnitActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.add.AddEmployeeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.detail.DetailEmployeeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.detail.DetailUnitActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,6 +43,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

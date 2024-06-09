@@ -1,10 +1,10 @@
-package com.example.testdb;
+package com.example.testdb.model;
 
 public class ItemContact {
     private int img;
     private String name;
 
-    ItemContact(int img, String name) {
+    public ItemContact(int img, String name) {
         this.img = img;
         this.name = name;
     }
