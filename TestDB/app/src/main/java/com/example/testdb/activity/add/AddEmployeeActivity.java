@@ -22,7 +22,7 @@ import com.example.testdb.model.Unit;
 public class AddEmployeeActivity extends AppCompatActivity {
 
     private ImageButton btnBack;
-    private TextView tvNamePage, tvAddEdit, tvDel;
+    private TextView tvNamePage, tvAddEdit, tvDel, tvUnit;
     private EditText etName, etPhone, etEmail, etPosition, etUnit;
     private EmployeeDB dbEmployee;
 
@@ -41,6 +41,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
         tvNamePage = findViewById(R.id.tv_name_layout);
         tvAddEdit = findViewById(R.id.btn_add_edit);
         tvDel = findViewById(R.id.btn_delete);
+        tvUnit = findViewById(R.id.tv_unit_employee);
 
         etName = findViewById(R.id.et_name_employee);
         etPhone = findViewById(R.id.et_phone_employee);
@@ -51,6 +52,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
         tvNamePage.setText("Thêm nhân viên");
         tvAddEdit.setText("Thêm");
         tvDel.setVisibility(TextView.GONE);
+        tvUnit.setText("Đơn vị trực thuộc (tùy chọn):");
 
         dbEmployee = new EmployeeDB();
 
@@ -65,7 +67,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
             String unit = etUnit.getText().toString().trim();
             String avatar = "";
             // check dữ liệu
-            if (!validate(name, phone, email, position, unit)) {
+            if (!validate(name, phone, email, position)) {
                 Toast.makeText(this, "Nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -76,12 +78,11 @@ public class AddEmployeeActivity extends AppCompatActivity {
         });
     }
 
-    private boolean validate(String name, String phone, String email, String position, String unit) {
+    private boolean validate(String name, String phone, String email, String position) {
         if (name.isEmpty() ||
                 phone.isEmpty() ||
                 email.isEmpty() ||
-                position.isEmpty() ||
-                unit.isEmpty()) {
+                position.isEmpty() ) {
             return false;
         }
         return true;

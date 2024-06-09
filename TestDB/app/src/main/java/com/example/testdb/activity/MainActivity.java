@@ -23,19 +23,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.testdb.R;
 import com.example.testdb.activity.add.AddEmployeeActivity;
 import com.example.testdb.activity.add.AddUnitActivity;
+import com.example.testdb.activity.detail.DetailEmployeeActivity;
+import com.example.testdb.activity.detail.DetailUnitActivity;
 import com.example.testdb.adapter.ContactAdapter;
 import com.example.testdb.db.EmployeeDB;
 import com.example.testdb.db.UnitDB;
 import com.example.testdb.model.Employee;
-import com.example.testdb.model.ItemContact;
 import com.example.testdb.model.Unit;
+import com.example.testdb.my_interface.IClickItemListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
 
@@ -48,9 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private UnitDB dbUnit;
     private EmployeeDB dbEmployee;
     private int selectedTabPosition = 0;
-    private int selectedEmployeePosition = -1;
-    private int selectedUnitPosition = -1;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +64,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         et_search = findViewById(R.id.et_search);
         tabLayout = findViewById(R.id.tab_contact);
         rcv_contact = findViewById(R.id.rcv_contact);
-        contactAdapter = new ContactAdapter(this);
         dbUnit = new UnitDB();
         dbEmployee = new EmployeeDB();
+        contactAdapter = new ContactAdapter(new IClickItemListener() {
+            @Override
+            public void onClickUnit(String id) {
+                onClickGoToDetail(id);
+            }
+
+            @Override
+            public void onClickEmployee(String id) {
+                onClickGoToDetail(id);
+            }
+        });
 
         // Thiết lập Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -98,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     contactAdapter.setContactList(unitList, null);
                     contactAdapter.notifyDataSetChanged();
                     et_search.setHint("Tìm kiếm tên đơn vị");
+                    selectedTabPosition = 0;
                     getDataUnit();
                 }
                 else if (tab.getPosition() == 1) {
@@ -105,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     contactAdapter.setContactList(null, employeeList);
                     contactAdapter.notifyDataSetChanged();
                     et_search.setHint("Tìm kiếm tên nhân viên");
+                    selectedTabPosition = 1;
                     getDataEmployee();
                 }
             }
@@ -114,6 +124,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onTabReselected(TabLayout.Tab tab) { }
         });
+
+        // chọn vào từng item của recycleview
+
     }
 
     private void getDataUnit() {
@@ -188,6 +201,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
             }
         });
+    }
+
+    private void onClickGoToDetail(String id) {
+        Intent intent;
+        if (selectedTabPosition == 0) {
+            intent = new Intent(this, DetailUnitActivity.class);
+        } else {
+            intent = new Intent(this, DetailEmployeeActivity.class);
+        }
+        intent.putExtra("id", id);
+        startActivity(intent);
     }
 
     @Override
