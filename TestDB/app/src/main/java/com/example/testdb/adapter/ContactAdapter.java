@@ -11,20 +11,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.testdb.R;
+import com.example.testdb.model.Employee;
 import com.example.testdb.model.ItemContact;
+import com.example.testdb.model.Unit;
 
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
 
     private Context context;
-    private List<ItemContact> contactList;
+    private List<Unit> unitList;
+    private List<Employee> employeeList;
 
     public ContactAdapter (Context context) {
         this.context = context;
     }
-    public void setContactList(List<ItemContact> contactList) {
-        this.contactList = contactList;
+    public void setContactList(List<Unit> unitList, List<Employee> employeeList) {
+        this.unitList = unitList;
+        this.employeeList = employeeList;
         notifyDataSetChanged();
     }
 
@@ -48,17 +52,22 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
     @Override
     public void onBindViewHolder(@NonNull ContactAdapter.ContactViewHolder holder, int position) {
-        ItemContact contact = contactList.get(position);
-        if (contact == null) return;
-        holder.img.setImageResource(contact.getImg());
-        holder.name.setText(contact.getName());
+        if (unitList != null) {
+            Unit unit = unitList.get(position);
+            holder.img.setImageResource(R.drawable.avatar1);
+            holder.name.setText(unit.getName());
+        }
+        else if (employeeList != null) {
+            Employee employee = employeeList.get(position);
+            holder.img.setImageResource(R.drawable.avatar1);
+            holder.name.setText(employee.getName());
+        }
     }
 
     @Override
     public int getItemCount() {
-        if (contactList != null) {
-            return contactList.size();
-        }
+        if (unitList != null) { return unitList.size(); }
+        if (employeeList != null) { return employeeList.size(); }
         return 0;
     }
 }

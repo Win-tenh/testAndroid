@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "282149760945",
+    "firebase_url": "https://test-firebase-ecfde-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "test-firebase-ecfde",
+    "storage_bucket": "test-firebase-ecfde.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282149760945:android:8848dde3b8b1b454a35790",
+        "android_client_info": {
+          "package_name": "com.example.testdb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHo34oPoqp64CVDGISPAoBboP1ovMxMVg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282149760945:android:6e6299846cbe9eefa35790",
+        "android_client_info": {
+          "package_name": "com.example.testfirebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHo34oPoqp64CVDGISPAoBboP1ovMxMVg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

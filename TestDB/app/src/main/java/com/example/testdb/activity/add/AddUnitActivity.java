@@ -2,6 +2,7 @@ package com.example.testdb.activity.add;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ public class AddUnitActivity extends AppCompatActivity {
 
     private ImageButton btnBack;
     private TextView tvNamePage, tvAddEdit, tvDel;
+    private EditText etName, etPhone, etEmail, etWebsite, etAddress, etParent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,13 @@ public class AddUnitActivity extends AppCompatActivity {
         tvNamePage = findViewById(R.id.tv_name_layout);
         tvAddEdit = findViewById(R.id.btn_add_edit);
         tvDel = findViewById(R.id.btn_delete);
+        // input
+        etName = findViewById(R.id.et_name_unit);
+        etPhone = findViewById(R.id.et_phone_unit);
+        etEmail = findViewById(R.id.et_email_unit);
+        etWebsite = findViewById(R.id.et_website_unit);
+        etAddress = findViewById(R.id.et_address_unit);
+        etParent = findViewById(R.id.et_parent_unit);
 
         tvNamePage.setText("Thêm đơn vị");
         tvAddEdit.setText("Thêm");
@@ -42,8 +51,30 @@ public class AddUnitActivity extends AppCompatActivity {
         // Event
         btnBack.setOnClickListener(v -> finish());
         tvAddEdit.setOnClickListener(v -> {
-            Intent intent = new Intent(this, DetailUnitActivity.class);
-            startActivity(intent);
+            if (validate()) { return; }
+            // xử lý
+            String name = etName.getText().toString().trim();
+            String phone = etPhone.getText().toString().trim();
+            String email = etEmail.getText().toString().trim();
+            String website = etWebsite.getText().toString().trim();
+            String address = etAddress.getText().toString().trim();
+            String parent = etParent.getText().toString().trim();
+            String avatar = "";
+
+
+//            Intent intent = new Intent(this, DetailUnitActivity.class);
+//            startActivity(intent);
         });
+    }
+
+    private boolean validate() {
+        if (etName.getText().toString().isEmpty() ||
+                etPhone.getText().toString().isEmpty() ||
+                etEmail.getText().toString().isEmpty() ||
+                etWebsite.getText().toString().isEmpty() ||
+                etAddress.getText().toString().isEmpty() ) {
+            return false;
+        }
+        return true;
     }
 }

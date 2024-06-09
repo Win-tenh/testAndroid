@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
@@ -23,8 +24,15 @@ import com.example.testdb.R;
 import com.example.testdb.activity.add.AddEmployeeActivity;
 import com.example.testdb.activity.add.AddUnitActivity;
 import com.example.testdb.adapter.ContactAdapter;
+import com.example.testdb.db.EmployeeDB;
+import com.example.testdb.db.UnitDB;
+import com.example.testdb.model.Employee;
 import com.example.testdb.model.ItemContact;
+import com.example.testdb.model.Unit;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +43,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private TabLayout tabLayout;
     private RecyclerView rcv_contact;
     private ContactAdapter contactAdapter;
-    private List<ItemContact> unitList, employeeList;
+    private ArrayList<Unit> unitList;
+    private ArrayList<Employee> employeeList;
+    private UnitDB dbUnit;
+    private EmployeeDB dbEmployee;
     private int selectedTabPosition = 0;
-    private int selectedEmployeePosition = 0;
-    private int selectedUnitPosition = 0;
+    private int selectedEmployeePosition = -1;
+    private int selectedUnitPosition = -1;
 
 
     @Override
@@ -56,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         tabLayout = findViewById(R.id.tab_contact);
         rcv_contact = findViewById(R.id.rcv_contact);
         contactAdapter = new ContactAdapter(this);
+        dbUnit = new UnitDB();
+        dbEmployee = new EmployeeDB();
 
         // Thiết lập Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -66,15 +79,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         unitList = new ArrayList<>();
         employeeList = new ArrayList<>();
-        getData();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rcv_contact.setLayoutManager(layoutManager);
         rcv_contact.setAdapter(contactAdapter);
-        contactAdapter.setContactList(unitList);
+        contactAdapter.setContactList(unitList, null);
         contactAdapter.notifyDataSetChanged();
 
         et_search.setHint("Tìm kiếm tên đơn vị");
+        getDataUnit();
 
         // chọn vào từng item của tablayout
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -82,51 +95,99 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 0) {
                     selectedTabPosition = 0;
-                    contactAdapter.setContactList(unitList);
+                    contactAdapter.setContactList(unitList, null);
                     contactAdapter.notifyDataSetChanged();
                     et_search.setHint("Tìm kiếm tên đơn vị");
+                    getDataUnit();
                 }
                 else if (tab.getPosition() == 1) {
                     selectedTabPosition = 1;
-                    contactAdapter.setContactList(employeeList);
+                    contactAdapter.setContactList(null, employeeList);
                     contactAdapter.notifyDataSetChanged();
                     et_search.setHint("Tìm kiếm tên nhân viên");
+                    getDataEmployee();
                 }
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) { }
             @Override
             public void onTabReselected(TabLayout.Tab tab) { }
         });
-
-//        TextView unit1_btn = findViewById(R.id.unit1_btn);
-//        unit1_btn.setOnClickListener(v -> {
-//            Intent intent = new Intent(MainActivity.this, UnitDetailActivity.class);
-//            intent.putExtra("unit_id", 1);
-//            startActivity(intent);
-//        });
-//
-//        LinearLayout employee1 = findViewById(R.id.employee1);
-//        employee1.setOnClickListener(v -> {
-//            Intent intent = new Intent(MainActivity.this, EmployeeDetailActivity.class);
-//            intent.putExtra("employee_id", 1);
-//            startActivity(intent);
-//        });
-
     }
 
-    private void getData() {
-        unitList.add(new ItemContact(R.drawable.avatar1, "Đơn vị 4"));
-        unitList.add(new ItemContact(R.drawable.avatar1, "Đơn vị 2"));
-        unitList.add(new ItemContact(R.drawable.avatar1, "Đơn vị 3"));
+    private void getDataUnit() {
+        dbUnit.getRefUnit().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                unitList.clear();
+                for (DataSnapshot unitSnapshot : snapshot.getChildren()) {
+                    String id = unitSnapshot.getKey();
+                    String name = unitSnapshot.child("unit_name").getValue(String.class);
+                    String email = unitSnapshot.child("unit_email").getValue(String.class);
+                    String phone = unitSnapshot.child("unit_phone").getValue(String.class);
+                    String logo = unitSnapshot.child("unit_logo").getValue(String.class);
+                    String website = unitSnapshot.child("unit_web").getValue(String.class);
+                    String address = unitSnapshot.child("unit_address").getValue(String.class);
+                    String parent_id = unitSnapshot.child("parent_id").getValue(String.class);
+                    Unit unit = new Unit(
+                            id,
+                            name,
+                            email,
+                            website,
+                            logo,
+                            address,
+                            phone,
+                            parent_id
+                    );
+                    unitList.add(unit);
+                }
+                // sắp xếp các item theo thứ tự tên nếu số lượng đơn vị > 1
+                if (unitList.size() > 1) unitList.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+                contactAdapter.notifyDataSetChanged();
+            }
 
-        employeeList.add(new ItemContact(R.drawable.avatar1, "James Harrison 1"));
-        employeeList.add(new ItemContact(R.drawable.avatar1, "Aberta Tyler 2"));
-        employeeList.add(new ItemContact(R.drawable.avatar1, "John Johnson 3"));
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-        // sắp xếp các item theo thứ tự tên
-        unitList.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
-        employeeList.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+            }
+        });
+    }
+
+    private void getDataEmployee() {
+        dbEmployee.getRefEmployee().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                employeeList.clear();
+                for (DataSnapshot Snapshot : snapshot.getChildren()) {
+                    String id = Snapshot.getKey();
+                    String name = Snapshot.child("employee_name").getValue(String.class);
+                    String email = Snapshot.child("employee_email").getValue(String.class);
+                    String phone = Snapshot.child("employee_phone").getValue(String.class);
+                    String logo = Snapshot.child("employee_logo").getValue(String.class);
+                    String position = Snapshot.child("unit_position").getValue(String.class);
+                    String unit_id = Snapshot.child("unit_id").getValue(String.class);
+                    Employee employee = new Employee(
+                            id,
+                            name,
+                            phone,
+                            email,
+                            position,
+                            logo,
+                            unit_id
+                    );
+                    employeeList.add(employee);
+                }
+                // sắp xếp các item theo thứ tự tên nếu số lượng đơn vị > 1
+                if (employeeList.size() > 1) unitList.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+                contactAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
