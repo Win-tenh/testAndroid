@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -15,18 +16,24 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.testdb.R;
+import com.example.testdb.activity.edit.EditEmployeeActivity;
 import com.example.testdb.db.EmployeeDB;
 import com.example.testdb.db.UnitDB;
 import com.example.testdb.model.Employee;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import java.io.Serializable;
 
 public class DetailEmployeeActivity extends AppCompatActivity {
 
     private TextView tvNamePage, tvAddEdit, tvDel;
     private EditText etName, etPhone, etEmal, etPosition, etUnit;
+    private ImageView iv_avatar;
     private EmployeeDB dbEmployee;
+    private Employee currentEmployee;
     private String idEmployee;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,7 @@ public class DetailEmployeeActivity extends AppCompatActivity {
         etEmal = findViewById(R.id.et_email_employee);
         etPosition = findViewById(R.id.et_position_employee);
         etUnit = findViewById(R.id.et_unit_employee);
+        iv_avatar = findViewById(R.id.iv_avatar);
         ImageButton backButton = findViewById(R.id.btn_back);
 
         tvNamePage.setText("Chi tiết nhân viên");
@@ -68,8 +76,11 @@ public class DetailEmployeeActivity extends AppCompatActivity {
         // Event
         backButton.setOnClickListener(v -> finish());
         tvAddEdit.setOnClickListener(v -> {
-            Intent intent = new Intent(this, DetailEmployeeActivity.class);
-            startActivity(intent);
+            Intent intent = new Intent(this, EditEmployeeActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("obj_employee", currentEmployee);
+            intent.putExtras(bundle);
+            this.startActivity(intent);
         });
         tvDel.setOnClickListener(v -> {
             deleteEmployee(idEmployee, etName.getText().toString());
@@ -102,7 +113,8 @@ public class DetailEmployeeActivity extends AppCompatActivity {
                         avatar,
                         id_unit
                 );
-                setEditText(employee);
+                currentEmployee = employee;
+                setEditText(currentEmployee);
             }
 
             @Override
@@ -111,6 +123,9 @@ public class DetailEmployeeActivity extends AppCompatActivity {
         });
     }
     private void setEditText(Employee employee) {
+        if (!employee.getAvatar().isEmpty()) {
+            Picasso.get().load(employee.getAvatar()).into(iv_avatar);
+        }
         etName.setText(employee.getName());
         etPhone.setText(employee.getPhone());
         etEmal.setText(employee.getEmail());

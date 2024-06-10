@@ -1,6 +1,8 @@
 package com.example.testdb.model;
 
-public class Employee {
+import java.io.Serializable;
+
+public class Employee implements Serializable {
     private String id;
     private String name;
     private String phone;

@@ -2,7 +2,9 @@ package com.example.testdb.model;
 
 import com.google.firebase.database.DataSnapshot;
 
-public class Unit {
+import java.io.Serializable;
+
+public class Unit implements Serializable {
     private String id;
     private String name;
     private String email;

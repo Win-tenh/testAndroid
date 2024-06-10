@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
 
-    boolean checkList;
+    private boolean checkList;
     private List<Unit> unitList;
     private List<Employee> employeeList;
     private IClickItemListener clickUnitListener;
@@ -32,7 +32,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     public void setContactList(List<Unit> unitList, List<Employee> employeeList) {
         this.unitList = unitList;
         this.employeeList = employeeList;
-        checkList = this.unitList != null ? true : false;
+        this.checkList = this.unitList != null ? true : false;
         notifyDataSetChanged();
     }
 
@@ -60,12 +60,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     @Override
     public void onBindViewHolder(@NonNull ContactAdapter.ContactViewHolder holder, int position) {
         String getId = "";
-        if (this.checkList) {
+        if (checkList) {
             Unit unit = unitList.get(position);
             holder.name.setText(unit.getName());
             getId = unit.getId();
             if (!unit.getLogo().isEmpty())
                 Picasso.get().load(unit.getLogo()).into(holder.img);
+            else
+                holder.img.setImageResource(R.drawable.avatar1);
         }
         else {
             Employee employee = employeeList.get(position);
@@ -73,10 +75,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
             getId = employee.getId();
             if (!employee.getAvatar().isEmpty())
                 Picasso.get().load(employee.getAvatar()).into(holder.img);
+            else
+                holder.img.setImageResource(R.drawable.avatar1);
         }
         final String id = getId;
         holder.layout_item.setOnClickListener( v -> {
-            if (this.checkList) {
+            if (checkList) {
                 clickUnitListener.onClickUnit(id);
             } else {
                 clickUnitListener.onClickEmployee(id);

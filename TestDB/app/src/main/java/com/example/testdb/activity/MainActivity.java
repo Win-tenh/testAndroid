@@ -2,6 +2,8 @@ package com.example.testdb.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -66,12 +68,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         rcv_contact = findViewById(R.id.rcv_contact);
         dbUnit = new UnitDB();
         dbEmployee = new EmployeeDB();
+
+        // Xem thông tin chi tiết
         contactAdapter = new ContactAdapter(new IClickItemListener() {
             @Override
-            public void onClickUnit(String id) {
-                onClickGoToDetail(id);
-            }
-
+            public void onClickUnit(String id) { onClickGoToDetail(id); }
             @Override
             public void onClickEmployee(String id) {
                 onClickGoToDetail(id);
@@ -101,32 +102,70 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    selectedTabPosition = 0;
-                    contactAdapter.setContactList(unitList, null);
-                    contactAdapter.notifyDataSetChanged();
-                    et_search.setHint("Tìm kiếm tên đơn vị");
-                    selectedTabPosition = 0;
-                    getDataUnit();
-                }
-                else if (tab.getPosition() == 1) {
-                    selectedTabPosition = 1;
-                    contactAdapter.setContactList(null, employeeList);
-                    contactAdapter.notifyDataSetChanged();
-                    et_search.setHint("Tìm kiếm tên nhân viên");
-                    selectedTabPosition = 1;
-                    getDataEmployee();
-                }
+                if (tab.getPosition() == 0) setRcvUnit();
+                else if (tab.getPosition() == 1) setRcvEmployee();
             }
-
             @Override
             public void onTabUnselected(TabLayout.Tab tab) { }
             @Override
             public void onTabReselected(TabLayout.Tab tab) { }
         });
 
-        // chọn vào từng item của recycleview
+        // tìm kiếm
+        et_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()) {
+                    if (selectedTabPosition == 0) setRcvUnit();
+                    else setRcvEmployee();
+                } else {
+                    if (selectedTabPosition == 0) filterListUnit(s.toString());
+                    else filterListEmployee(s.toString());
+                }
+            }
+        });
+    }
 
+    private void filterListUnit(String s) {
+        ArrayList<Unit> filteredList = new ArrayList<>();
+        for (Unit unit : unitList) {
+            if (unit.getName().toLowerCase().contains(s.toLowerCase())) {
+                filteredList.add(unit);
+            }
+            contactAdapter.setContactList(filteredList, null);
+            contactAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void filterListEmployee(String s) {
+        ArrayList<Employee> filteredList = new ArrayList<>();
+        for (Employee employee : employeeList) {
+            if (employee.getName().toLowerCase().contains(s.toLowerCase())) {
+                filteredList.add(employee);
+                contactAdapter.setContactList(null, filteredList);
+                contactAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    private void setRcvUnit() {
+        contactAdapter.setContactList(unitList, null);
+        contactAdapter.notifyDataSetChanged();
+        et_search.setHint("Tìm kiếm tên đơn vị");
+        selectedTabPosition = 0;
+        getDataUnit();
+    }
+
+    private void setRcvEmployee() {
+        contactAdapter.setContactList(null, employeeList);
+        contactAdapter.notifyDataSetChanged();
+        et_search.setHint("Tìm kiếm tên nhân viên");
+        selectedTabPosition = 1;
+        getDataEmployee();
     }
 
     private void getDataUnit() {

@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.testdb.R;
+import com.example.testdb.activity.edit.EditEmployeeActivity;
 import com.example.testdb.activity.edit.EditUnitActivity;
 import com.example.testdb.db.UnitDB;
 import com.example.testdb.model.Unit;
@@ -32,6 +33,7 @@ public class DetailUnitActivity extends AppCompatActivity {
     private ImageView ivLogo;
     private UnitDB dbUnit;
     private String idUnit;
+    private Unit currentUnit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,10 @@ public class DetailUnitActivity extends AppCompatActivity {
         btn_back.setOnClickListener(v -> finish());
         tvAddEdit.setOnClickListener(v -> {
             Intent intent = new Intent(this, EditUnitActivity.class);
-            startActivity(intent);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("obj_unit", currentUnit);
+            intent.putExtras(bundle);
+            this.startActivity(intent);
         });
         tvDel.setOnClickListener(v -> {
             deleteUnit(idUnit, etName.getText().toString());
@@ -113,7 +118,8 @@ public class DetailUnitActivity extends AppCompatActivity {
                         phone,
                         parent_id
                 );
-                setEditText(unit);
+                currentUnit = unit;
+                setEditText(currentUnit);
             }
 
             @Override
