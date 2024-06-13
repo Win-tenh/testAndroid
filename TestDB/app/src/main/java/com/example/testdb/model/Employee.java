@@ -11,6 +11,9 @@ public class Employee implements Serializable {
     private String avatar;
     private String id_unit;
 
+    public Employee() {
+        this("","","","","","","");
+    }
     public Employee(String id, String name, String phone, String email, String position, String avatar, String id_unit) {
         this.id = id;
         this.name = name;

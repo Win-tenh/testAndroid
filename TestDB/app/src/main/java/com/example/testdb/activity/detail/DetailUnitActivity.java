@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -20,20 +22,29 @@ import com.example.testdb.R;
 import com.example.testdb.activity.edit.EditEmployeeActivity;
 import com.example.testdb.activity.edit.EditUnitActivity;
 import com.example.testdb.db.UnitDB;
+import com.example.testdb.model.Employee;
 import com.example.testdb.model.Unit;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class DetailUnitActivity extends AppCompatActivity {
 
     private TextView tvNamePage, tvAddEdit, tvDel;
     private EditText etName, etPhone, etEmail, etWebsite, etAddress, etParent;
-    private ImageView ivLogo;
+    private CircleImageView ivLogo;
     private UnitDB dbUnit;
     private String idUnit;
     private Unit currentUnit;
+    private ArrayList<Unit> listUnit;
+    private ArrayList<Employee> listEmployee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,23 +69,13 @@ public class DetailUnitActivity extends AppCompatActivity {
         etParent = findViewById(R.id.et_parent_unit);
         ImageButton btn_back = findViewById(R.id.btn_back);
 
-        tvNamePage.setText("Chi tiết đơn vị");
-
-        etName.setKeyListener(null);
-        etName.setTextIsSelectable(true);
-        etPhone.setKeyListener(null);
-        etPhone.setTextIsSelectable(true);
-        etEmail.setKeyListener(null);
-        etEmail.setTextIsSelectable(true);
-        etWebsite.setKeyListener(null);
-        etWebsite.setTextIsSelectable(true);
-        etAddress.setKeyListener(null);
-        etAddress.setTextIsSelectable(true);
-        etParent.setKeyListener(null);
-        etParent.setTextIsSelectable(true);
+        setLayout();
 
         dbUnit = new UnitDB();
         idUnit = getIntent().getStringExtra("id");
+        Bundle getBundle = getIntent().getExtras();
+        listUnit = (ArrayList<Unit>) getBundle.getSerializable("unitList");
+        listEmployee = (ArrayList<Employee>) getBundle.getSerializable("employeeList");
 
         // Event
         btn_back.setOnClickListener(v -> finish());
@@ -82,11 +83,13 @@ public class DetailUnitActivity extends AppCompatActivity {
             Intent intent = new Intent(this, EditUnitActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("obj_unit", currentUnit);
+            bundle.putSerializable("unitList", listUnit);
             intent.putExtras(bundle);
             this.startActivity(intent);
         });
         tvDel.setOnClickListener(v -> {
-            deleteUnit(idUnit, etName.getText().toString());
+            if (!checkUnit()) deleteUnit(idUnit, etName.getText().toString());
+            else Toast.makeText(this, "Không thể xóa đơn vị này", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -101,27 +104,10 @@ public class DetailUnitActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) return;
-                String name = snapshot.child("name").getValue(String.class);
-                String email = snapshot.child("email").getValue(String.class);
-                String phone = snapshot.child("phone").getValue(String.class);
-                String logo = snapshot.child("logo").getValue(String.class);
-                String website = snapshot.child("website").getValue(String.class);
-                String address = snapshot.child("address").getValue(String.class);
-                String parent_id = snapshot.child("parentUnitId").getValue(String.class);
-                Unit unit = new Unit(
-                        id,
-                        name,
-                        email,
-                        website,
-                        logo,
-                        address,
-                        phone,
-                        parent_id
-                );
+                Unit unit = snapshot.getValue(Unit.class);
                 currentUnit = unit;
-                setEditText(currentUnit);
+                setInput(currentUnit);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 finish();
@@ -129,7 +115,7 @@ public class DetailUnitActivity extends AppCompatActivity {
         });
     }
 
-    private void setEditText(Unit unit) {
+    private void setInput(Unit unit) {
         if (!unit.getLogo().isEmpty()) {
             Picasso.get().load(unit.getLogo()).into(ivLogo);
         }
@@ -138,11 +124,24 @@ public class DetailUnitActivity extends AppCompatActivity {
         etPhone.setText(unit.getPhone());
         etWebsite.setText(unit.getWebsite());
         etAddress.setText(unit.getAddress());
-        if (unit.getParentUnitId().equals("")) {
-            etParent.setText("Không có");
-        } else {
-            etParent.setText(unit.getParentUnitId());
-        }
+        // tìm kiếm tên đơn vị cha trong listUnit
+        etParent.setText("Không có");
+        for (Unit u : listUnit)
+            if (u.getId().equals(unit.getParentUnitId())) {
+                etParent.setText(u.getName());
+                break;
+            }
+    }
+
+    // kiểm tra unit muốn xóa có trong parent_id của listUnit và id_unit trong listEmployee không
+    private boolean checkUnit() {
+        for (Unit u : listUnit)
+            if (u.getParentUnitId().equals(idUnit))
+                return true;
+        for (Employee e : listEmployee)
+            if (e.getId_unit().equals(idUnit))
+                return true;
+        return false;
     }
 
     private void deleteUnit(String id, String name) {
@@ -155,9 +154,26 @@ public class DetailUnitActivity extends AppCompatActivity {
         });
         builder.setNeutralButton("Có", (dialog, which) -> {
             dbUnit.deleteUnit(id);
+            Toast.makeText(this, "Đã xóa đơn vị " + name, Toast.LENGTH_SHORT).show();
             this.finish();
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void setLayout() {
+        tvNamePage.setText("Chi tiết đơn vị");
+        etName.setKeyListener(null);
+        etName.setTextIsSelectable(true);
+        etPhone.setKeyListener(null);
+        etPhone.setTextIsSelectable(true);
+        etEmail.setKeyListener(null);
+        etEmail.setTextIsSelectable(true);
+        etWebsite.setKeyListener(null);
+        etWebsite.setTextIsSelectable(true);
+        etAddress.setKeyListener(null);
+        etAddress.setTextIsSelectable(true);
+        etParent.setKeyListener(null);
+        etParent.setTextIsSelectable(true);
     }
 }

@@ -18,6 +18,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
 
     private boolean checkList;
@@ -37,9 +39,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     }
 
     public class ContactViewHolder extends RecyclerView.ViewHolder {
-
         private LinearLayout layout_item;
-        private ImageView img;
+        private CircleImageView img;
         private TextView name;
         public ContactViewHolder(@NonNull View itemView) {
             super(itemView);

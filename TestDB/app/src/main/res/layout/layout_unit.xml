@@ -11,12 +11,13 @@
         android:layout_marginBottom="16dp"
         android:orientation="horizontal">
 
-        <ImageView
+        <!-- Làm cho logo hình chòn và có 1 viền xám bao quanh -->
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_logo"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/avatar1" />
+            android:src="@drawable/avatar1"
+            />
 
         <EditText
             android:id="@+id/et_name_unit"
@@ -24,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:hint="Nhập tên"
+            android:hint="Tên đơn vị"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -36,10 +37,9 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:layout_weight="1"
             android:text="Số điện thoại:"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -48,106 +48,80 @@
             android:id="@+id/et_phone_unit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Nhập sdt"
+            android:hint="0123456789"
             android:textSize="18sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <!-- Email -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal">
+        android:text="Email:"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1"
-            android:text="Email:"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/et_email_unit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Nhập email"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/et_email_unit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal">
+        android:layout_marginBottom="16dp"
+        android:hint="example@gmail.com"
+        android:textSize="18sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1"
-            android:text="Website:"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/et_website_unit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Nhập website"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
+    <!-- Website -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal">
+        android:text="Website:"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1"
-            android:text="Địa chỉ:"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/et_address_unit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Nhập địa chỉ"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/et_website_unit"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="example.com"
+        android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/tv_parent_unit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1"
-            android:text="Đơn vị trực thuộc:"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+    <!-- Address -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Địa chỉ:"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/et_parent_unit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Nhập tên đơn vị"
-            android:textSize="18sp" />
-    </LinearLayout>
+    <EditText
+        android:id="@+id/et_address_unit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="123 Đường ABC, Quận XYZ"
+        android:textSize="18sp" />
+
+    <!-- Parent Unit -->
+    <TextView
+        android:id="@+id/tv_parent_unit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Đơn vị trực thuộc:"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/et_parent_unit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhập tên đơn vị"
+        android:textSize="18sp" />
+
+    <Spinner
+        android:id="@+id/sp_parent_unit"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/blue"
+        android:visibility="gone"/>
 
 </LinearLayout>

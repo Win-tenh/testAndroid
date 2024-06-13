@@ -6,6 +6,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -20,21 +21,26 @@ import com.example.testdb.activity.edit.EditEmployeeActivity;
 import com.example.testdb.db.EmployeeDB;
 import com.example.testdb.db.UnitDB;
 import com.example.testdb.model.Employee;
+import com.example.testdb.model.Unit;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DetailEmployeeActivity extends AppCompatActivity {
 
     private TextView tvNamePage, tvAddEdit, tvDel;
     private EditText etName, etPhone, etEmal, etPosition, etUnit;
-    private ImageView iv_avatar;
+    private CircleImageView iv_avatar;
     private EmployeeDB dbEmployee;
     private Employee currentEmployee;
     private String idEmployee;
+    private ArrayList<Unit> listUnit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,21 +63,12 @@ public class DetailEmployeeActivity extends AppCompatActivity {
         iv_avatar = findViewById(R.id.iv_avatar);
         ImageButton backButton = findViewById(R.id.btn_back);
 
-        tvNamePage.setText("Chi tiết nhân viên");
-
-        etName.setKeyListener(null);
-        etName.setTextIsSelectable(true);
-        etPhone.setKeyListener(null);
-        etPhone.setTextIsSelectable(true);
-        etEmal.setKeyListener(null);
-        etEmal.setTextIsSelectable(true);
-        etPosition.setKeyListener(null);
-        etPosition.setTextIsSelectable(true);
-        etUnit.setKeyListener(null);
-        etUnit.setTextIsSelectable(true);
+        setLayout();
 
         dbEmployee = new EmployeeDB();
         idEmployee = getIntent().getStringExtra("id");
+        Bundle getBundle = getIntent().getExtras();
+        listUnit = (ArrayList<Unit>) getBundle.getSerializable("unitList");
 
         // Event
         backButton.setOnClickListener(v -> finish());
@@ -79,6 +76,7 @@ public class DetailEmployeeActivity extends AppCompatActivity {
             Intent intent = new Intent(this, EditEmployeeActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("obj_employee", currentEmployee);
+            bundle.putSerializable("unitList", listUnit);
             intent.putExtras(bundle);
             this.startActivity(intent);
         });
@@ -98,21 +96,7 @@ public class DetailEmployeeActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) return;
-                String name = snapshot.child("name").getValue(String.class);
-                String email = snapshot.child("email").getValue(String.class);
-                String phone = snapshot.child("phone").getValue(String.class);
-                String avatar = snapshot.child("avatar").getValue(String.class);
-                String position = snapshot.child("position").getValue(String.class);
-                String id_unit = snapshot.child("id_unit").getValue(String.class);
-                Employee employee = new Employee(
-                        id,
-                        name,
-                        phone,
-                        email,
-                        position,
-                        avatar,
-                        id_unit
-                );
+                Employee employee = snapshot.getValue(Employee.class);
                 currentEmployee = employee;
                 setEditText(currentEmployee);
             }
@@ -130,9 +114,13 @@ public class DetailEmployeeActivity extends AppCompatActivity {
         etPhone.setText(employee.getPhone());
         etEmal.setText(employee.getEmail());
         etPosition.setText(employee.getPosition());
-        if (employee.getId_unit().equals(""))
-            etUnit.setText("Không có");
-        else etUnit.setText(employee.getId_unit());
+
+        etUnit.setText("Không có");
+        for (Unit u : listUnit)
+            if (u.getId().equals(employee.getId_unit())) {
+                etUnit.setText(u.getName());
+                break;
+            }
     }
 
     private void deleteEmployee(String id, String name) {
@@ -145,9 +133,24 @@ public class DetailEmployeeActivity extends AppCompatActivity {
         });
         builder.setNeutralButton("Có", (dialog, which) -> {
             dbEmployee.deleteEmployee(id);
+            Toast.makeText(this, "Đã xóa nhân viên " + name, Toast.LENGTH_SHORT).show();
             this.finish();
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void setLayout() {
+        tvNamePage.setText("Chi tiết nhân viên");
+        etName.setKeyListener(null);
+        etName.setTextIsSelectable(true);
+        etPhone.setKeyListener(null);
+        etPhone.setTextIsSelectable(true);
+        etEmal.setKeyListener(null);
+        etEmal.setTextIsSelectable(true);
+        etPosition.setKeyListener(null);
+        etPosition.setTextIsSelectable(true);
+        etUnit.setKeyListener(null);
+        etUnit.setTextIsSelectable(true);
     }
 }

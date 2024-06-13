@@ -2,6 +2,7 @@ package com.example.testdb.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         contactAdapter.notifyDataSetChanged();
 
         et_search.setHint("Tìm kiếm tên đơn vị");
+        getDataEmployee();
         getDataUnit();
 
         // chọn vào từng item của tablayout
@@ -174,24 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 unitList.clear();
                 for (DataSnapshot unitSnapshot : snapshot.getChildren()) {
-                    String id = unitSnapshot.getKey();
-                    String name = unitSnapshot.child("name").getValue(String.class);
-                    String email = unitSnapshot.child("email").getValue(String.class);
-                    String phone = unitSnapshot.child("phone").getValue(String.class);
-                    String logo = unitSnapshot.child("logo").getValue(String.class);
-                    String website = unitSnapshot.child("website").getValue(String.class);
-                    String address = unitSnapshot.child("address").getValue(String.class);
-                    String parent_id = unitSnapshot.child("parentUnitId").getValue(String.class);
-                    Unit unit = new Unit(
-                            id,
-                            name,
-                            email,
-                            website,
-                            logo,
-                            address,
-                            phone,
-                            parent_id
-                    );
+                    Unit unit = unitSnapshot.getValue(Unit.class);
                     unitList.add(unit);
                 }
                 // sắp xếp các item theo thứ tự tên nếu số lượng đơn vị > 1
@@ -212,22 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 employeeList.clear();
                 for (DataSnapshot Snapshot : snapshot.getChildren()) {
-                    String id = Snapshot.getKey();
-                    String name = Snapshot.child("name").getValue(String.class);
-                    String email = Snapshot.child("email").getValue(String.class);
-                    String phone = Snapshot.child("phone").getValue(String.class);
-                    String avatar = Snapshot.child("avatar").getValue(String.class);
-                    String position = Snapshot.child("position").getValue(String.class);
-                    String id_unit = Snapshot.child("id_unit").getValue(String.class);
-                    Employee employee = new Employee(
-                            id,
-                            name,
-                            phone,
-                            email,
-                            position,
-                            avatar,
-                            id_unit
-                    );
+                    Employee employee = Snapshot.getValue(Employee.class);
                     employeeList.add(employee);
                 }
                 // sắp xếp các item theo thứ tự tên nếu số lượng đơn vị > 1
@@ -250,6 +220,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             intent = new Intent(this, DetailEmployeeActivity.class);
         }
         intent.putExtra("id", id);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("unitList", unitList);
+        bundle.putSerializable("employeeList", employeeList);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
@@ -262,15 +236,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = null;
         if (item.getItemId() == R.id.action_add_unit) {
-            Intent intent = new Intent(this, AddUnitActivity.class);
-            startActivity(intent);
-            return true;
+            intent = new Intent(this, AddUnitActivity.class);
+            // truyền danh sách Unit
+
         } else if (item.getItemId() == R.id.action_add_employee) {
-            Intent intent = new Intent(this, AddEmployeeActivity.class);
-            startActivity(intent);
-            return true;
+            intent = new Intent(this, AddEmployeeActivity.class);
         }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("unitList", unitList);
+        intent.putExtras(bundle);
+        startActivity(intent);
         return super.onOptionsItemSelected(item);
     }
 

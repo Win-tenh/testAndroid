@@ -5,125 +5,110 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/avatar1" />
+
+        <EditText
+            android:id="@+id/et_name_employee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:hint="Nhập tên nhân viên"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-            <ImageView
-                android:id="@+id/iv_avatar"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/avatar1" />
+    <!-- Phone -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/et_name_employee"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:hint="Nhập tên nhân viên"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="Số điện thoại:"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/et_phone_employee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal">
+            android:hint="Nhập số điện thoại"
+            android:textSize="18sp" />
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_weight="1"
-                android:text="Số điện thoại:"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+    <!-- Email -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:text="Email:"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/et_phone_employee"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Nhập số điện thoại"
-                android:textSize="18sp" />
-        </LinearLayout>
+    <EditText
+        android:id="@+id/et_email_employee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Nhập email"
+        android:textSize="18sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal">
+    <!-- Position -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:text="Chức vụ:"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_weight="1"
-                android:text="Email:"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+    <EditText
+        android:id="@+id/et_position_employee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Nhập chức vụ"
+        android:textSize="18sp" />
 
-            <EditText
-                android:id="@+id/et_email_employee"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Nhập email"
-                android:textSize="18sp" />
-        </LinearLayout>
+    <!-- Unit -->
+    <TextView
+        android:id="@+id/tv_unit_employee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:text="Đơn vị trực thuộc:"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal">
+    <EditText
+        android:id="@+id/et_unit_employee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhập tên đơn vị"
+        android:textSize="18sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_weight="1"
-                android:text="Chức vụ:"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/et_position_employee"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Nhập chức vụ"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_unit_employee"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_weight="1"
-                android:text="Đơn vị trực thuộc:"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/et_unit_employee"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Nhập tên đơn vị"
-                android:textSize="18sp" />
-        </LinearLayout>
+    <Spinner
+        android:id="@+id/sp_parent_unit"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/blue"
+        android:visibility="gone"
+        />
 
 </LinearLayout>

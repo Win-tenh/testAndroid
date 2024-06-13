@@ -14,20 +14,40 @@ public class Unit implements Serializable {
     private String phone;
     private String parentUnitId;
 
-    public Unit(String id, String name, String email, String website, String logo, String address, String phone, String parentUnitId) {
+    public Unit(
+            String address,
+            String email,
+            String id,
+            String logo,
+            String name,
+            String phone,
+            String parentUnitId,
+            String website
+            ) {
+        this.address = address;
+        this.email = email;
+        this.id = id;
+        this.logo = logo;
+        this.name = name;
+        this.parentUnitId = parentUnitId;
+        this.phone = phone;
+        this.website = website;
+    }
+
+    public Unit(String id, String name) {
         this.id = id;
         this.name = name;
-        this.email = email;
-        this.website = website;
-        this.logo = logo;
-        this.address = address;
-        this.phone = phone;
-        this.parentUnitId = parentUnitId;
+        this.parentUnitId = "";
+        this.address = "";
+        this.email = "";
+        this.logo = "";
+        this.phone = "";
+        this.website = "";
     }
 
     public Unit() {
-        DataSnapshot snapshot = null;
-        snapshot.getValue(Unit.class);
+        // Default constructor required for calls to DataSnapshot.getValue(Unit.class)
+        this("", "", "", "", "", "", "", "");
     }
 
     public String getId() { return id; }
@@ -61,4 +81,9 @@ public class Unit implements Serializable {
     public String getParentUnitId() { return parentUnitId; }
 
     public void setParentUnitId(String parentUnitId) { this.parentUnitId = parentUnitId; }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
